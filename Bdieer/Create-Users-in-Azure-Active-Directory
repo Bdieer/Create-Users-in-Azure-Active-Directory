@@ -1,0 +1,21 @@
+# Connect to Azure AD
+Connect-AzureAD
+
+# Define user details
+$displayName = "Ahmed Bdier"
+$userPrincipalName = "ahmed.bdier@yourdomain.com"
+$firstName = "Ahmed"
+$lastName = "Bdier"
+$password = "P@ssw0rd@2024"
+$location = "EGY"
+
+# Create the user
+New-AzureADUser -DisplayName $displayName -UserPrincipalName $userPrincipalName -AccountEnabled $true -MailNickName $userPrincipalName -PasswordProfile @{Password = $password; ForceChangePasswordNextSignIn = $false} -GivenName $firstName -Surname $lastName -UsageLocation $location
+
+# Optional: Assign a license to the user
+# Assign a license to the user
+$license = New-Object -TypeName Microsoft.Open.AzureAD.Model.AssignedLicense
+$license.SkuId = "your_license_sku_id"
+$licensePlans = "your_license_plan_1", "your_license_plan_2"
+$license.ServicePlans = $licensePlans
+Set-AzureADUserLicense -ObjectId (Get-AzureADUser -Filter "UserPrincipalName eq '$userPrincipalName'").ObjectId -AssignedLicenses $license
